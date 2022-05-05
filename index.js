@@ -25,6 +25,15 @@ async function run(){
             res.send(cars);
         });
 
+        app.get('car/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id:ObjectId(id)};
+            const car=await carCollection.findOne(query);
+            res.send(car);
+        });
+
+        
+
         
 
     }
