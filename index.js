@@ -34,17 +34,11 @@ async function run(){
     try{
         await client.connect();
         const carCollection=client.db('carhouse').collection('carcollection');
-
+        const orderCollection = client.db('carorder').collection('cars');
 
         app.post('/login', async (req, res) => {
             const user = req.body;
-            const accessToken = jwt.sign(user, process.env.app.post('/login', async (req, res) => {
-            const user = req.body;
             const accessToken = jwt.sign(user, process.env.DB_ACCESS_TOKEN, {
-                expiresIn: '1d'
-            });
-            res.send({ accessToken });
-        }), {
                 expiresIn: '1d'
             });
             res.send({ accessToken });
@@ -80,6 +74,26 @@ async function run(){
             const result=await carCollection.delete(query);
             res.send(result);
         });
+
+        app.get('/order',verifyJWT,async(req,res)=>{
+            const decodedEmail=req.decoded.email;
+            const email=req.query.email;
+            if(email===decodedEmail){
+                const query= {email:email};
+                const cursor=orderCollection.find(query);
+                const orders=await cursor.toArray();
+                res.send(orders);
+            }
+            else{
+                res.status(403).send({message:'forbidden access'});
+            }
+        })
+
+        app.post('/order',async(req,res)=>{
+            const order=req.body;
+            const result=await orderCollection.insertOne(order);
+            res.send(result);
+        })
 
     }
     finally{
