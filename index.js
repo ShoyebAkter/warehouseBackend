@@ -27,10 +27,10 @@ async function run(){
         });
         
 
-        app.get('car/:id',async(req,res)=>{
+        app.get('/car/:id',async(req,res)=>{
             const id=req.params.id;
             console.log(id)
-            const query={_id:ObjectId(id)};
+            const query={ _id:ObjectId(id)};
             const car=await carCollection.findOne(query);
             res.send(car);
         });
@@ -38,6 +38,7 @@ async function run(){
 
         app.post('/car',async(req,res)=>{
             const newCar=req.body;
+            // console.log(newCar)
             const result=await carCollection.insertOne(newCar);
             res.send(result);
         });
