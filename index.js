@@ -78,20 +78,26 @@ async function run(){
 
 
         //order
-        app.get('/order',verifyJWT, async (req, res) => {
-            const decodedEmail = req.decoded.email;
-            console.log(decodedEmail)
-            const email = req.query.email;
-            console.log(email)
-            if (email === decodedEmail) {
-                const query = { email: email };
-                const cursor = orderCollection.find(query);
-                const orders = await cursor.toArray();
-                res.send(orders);
-            }
-            else{
-                res.status(403).send({message: 'forbidden access'})
-            }
+        // app.get('/order',verifyJWT, async (req, res) => {
+        //     const decodedEmail = req.decoded.email;
+        //     console.log(decodedEmail)
+        //     const email = req.query.email;
+        //     console.log(email)
+        //     if (email === decodedEmail) {
+        //         const query = { email: email };
+        //         const cursor = orderCollection.find(query);
+        //         const orders = await cursor.toArray();
+        //         res.send(orders);
+        //     }
+        //     else{
+        //         res.status(403).send({message: 'forbidden access'})
+        //     }
+        // })
+        app.get('/order',async(req,res)=>{
+            const query={};
+            const cursor=orderCollection.find(query);
+            const orders=await cursor.toArray();
+            res.send();
         })
 
         app.post('/order',async(req,res)=>{
@@ -108,8 +114,6 @@ async function run(){
 }
 
 run().catch(console.dir);
-
-
 
 
 app.get('/',(req,res)=>{
