@@ -87,7 +87,7 @@ async function run(){
                 quantity: updatedProduct.quantity
               }
             }
-            const result=await productCollection.updateOne(filter,updatedDoc,options)
+            const result=await carCollection.updateOne(filter,updatedDoc,options)
             res.send(result)
           })
 
