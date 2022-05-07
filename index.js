@@ -70,11 +70,26 @@ async function run(){
         
         app.delete('/car/:id',async(req,res)=>{
             const id=req.params.id;
+            console.log(id)
             const query={_id: ObjectId(id)};
             const result=await carCollection.delete(query);
             res.send(result);
         });
 
+        //update
+        app.put('/cars/:id',async(req,res)=>{
+            const id=req.params.id
+            const updatedProduct=req.body
+            const filter ={_id:ObjectId(id)}
+            const options = { upsert: true }
+            const updatedDoc={
+              $set:{
+                quantity: updatedProduct.quantity
+              }
+            }
+            const result=await productCollection.updateOne(filter,updatedDoc,options)
+            res.send(result)
+          })
 
         //order
         // app.get('/order',verifyJWT, async (req, res) => {
