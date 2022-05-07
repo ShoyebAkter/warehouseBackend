@@ -11,7 +11,6 @@ app.use(express.json());
 // 
 
 function verifyJWT(req, res, next) {
-    console.log(req)
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).send({ message: 'unauthorized access' });
@@ -94,10 +93,11 @@ async function run(){
         //     }
         // })
         app.get('/order',async(req,res)=>{
-            const query={};
+            const email = req.query.email;
+            const query={email: email};
             const cursor=orderCollection.find(query);
             const orders=await cursor.toArray();
-            res.send();
+            res.send(orders);
         })
 
         app.post('/order',async(req,res)=>{
