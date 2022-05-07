@@ -14,7 +14,7 @@ function verifyJWT(req, res, next) {
     console.log(req)
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).send({ message: 'unauthorized accesssss' });
+        return res.status(401).send({ message: 'unauthorized access' });
     }
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.DB_ACCESS_TOKEN, (err, decoded) => {
@@ -78,7 +78,7 @@ async function run(){
 
 
         //order
-        app.get('/order', verifyJWT, async (req, res) => {
+        app.get('/order',verifyJWT, async (req, res) => {
             const decodedEmail = req.decoded.email;
             const email = req.query.email;
             if (email === decodedEmail) {
