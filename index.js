@@ -10,21 +10,21 @@ app.use(cors());
 app.use(express.json());
 // 
 
-// function verifyJWT(req, res, next) {
-//     const authHeader = req.headers.authorization;
-//     if (!authHeader) {
-//         return res.status(401).send({ message: 'unauthorized access' });
-//     }
-//     const token = authHeader.split(' ')[1];
-//     jwt.verify(token, process.env.DB_ACCESS_TOKEN, (err, decoded) => {
-//         if (err) {
-//             return res.status(403).send({ message: 'Forbidden access' });
-//         }
-//         console.log('decoded', decoded);
-//         req.decoded = decoded;
-//         next();
-//     })
-// }
+function verifyJWT(req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send({ message: 'unauthorized access' });
+    }
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.DB_ACCESS_TOKEN, (err, decoded) => {
+        if (err) {
+            return res.status(403).send({ message: 'Forbidden access' });
+        }
+        console.log('decoded', decoded);
+        req.decoded = decoded;
+        next();
+    })
+}
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pac0a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -54,7 +54,7 @@ async function run(){
 
         app.get('/car/:id',async(req,res)=>{
             const id=req.params.id;
-            console.log(id)
+            // console.log(id)
             const query={ _id:ObjectId(id)};
             const car=await carCollection.findOne(query);
             res.send(car);
@@ -71,16 +71,18 @@ async function run(){
         app.delete('/car/:id',async(req,res)=>{
             const id=req.params.id;
             console.log(id)
-            const query={_id: ObjectId(id)};
-            const result=await carCollection.delete(query);
+            const query={ _id: ObjectId(id)};
+            const result=await carCollection.deleteOne(query);
             res.send(result);
         });
 
         //update
-        app.put('/cars/:id',async(req,res)=>{
+
+
+        app.put('/car/:id',async(req,res)=>{
             const id=req.params.id
             const updatedProduct=req.body
-            const filter ={_id:ObjectId(id)}
+            const filter ={ _id:ObjectId(id)}
             const options = { upsert: true }
             const updatedDoc={
               $set:{
@@ -117,7 +119,7 @@ async function run(){
 
         app.post('/order',async(req,res)=>{
             const order=req.body;
-            console.log(order);
+            // console.log(order);
             const result=await orderCollection.insertOne(order);
             res.send(result);
         })
